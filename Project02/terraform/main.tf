@@ -30,7 +30,7 @@ module "jenkins_security" {
   vpc_id         = module.vpc.vpc_id
   sg_name        = "jenkins-sg"
   ingress_rules  = var.ingress_rule_jenkins
-  egress_rules   = []
+  egress_rules   = var.egress_rule_jenkins
 }
 
 module "ssm_security" {
@@ -38,8 +38,8 @@ module "ssm_security" {
   sg_description = "Allow connectivity to SSM endpoints"
   vpc_id         = module.vpc.vpc_id
   sg_name        = "SSM-sg"
-  egress_rules   = var.SSM_rules
-  ingress_rules  = var.SSM_rules
+  ingress_rules   = var.SSM_rules
+  egress_rules  = var.SSM_rules
 }
 
 module "internet_security" {
@@ -47,8 +47,8 @@ module "internet_security" {
   sg_description = "Allow connectivity to the Internet on port 80 & 443"
   vpc_id         = module.vpc.vpc_id
   sg_name        = "Internet-sg"
-  egress_rules   = var.internet_rules
-  ingress_rules  = var.internet_rules
+  ingress_rules   = var.internet_rules
+  egress_rules  = var.internet_rules
 }
 
 module "sonar_security" {
@@ -125,14 +125,6 @@ resource "aws_lb" "main" {
   subnets            = module.vpc.public_subnets
 }
 
-resource "aws_lb_target_group" "tg" {
-  for_each = var.nlb_config
-  name     = "${each.key}-tg"
-  port     = each.value.port
-  protocol = "TCP"
-  vpc_id   = module.vpc.vpc_id
-}
-
 resource "aws_lb_listener" "listener" {
   for_each          = aws_lb_target_group.tg
   load_balancer_arn = aws_lb.main.arn
@@ -143,6 +135,14 @@ resource "aws_lb_listener" "listener" {
     type             = "forward"
     target_group_arn = each.value.arn
   }
+}
+
+resource "aws_lb_target_group" "tg" {
+  for_each = var.nlb_config
+  name     = "${each.key}-tg"
+  port     = each.value.port
+  protocol = "TCP"
+  vpc_id   = module.vpc.vpc_id
 }
 
 resource "aws_lb_target_group_attachment" "attach" {

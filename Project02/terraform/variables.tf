@@ -46,6 +46,10 @@ variable "ingress_rule_jenkins" {
   type = list(any)
 }
 
+variable "egress_rule_jenkins" {
+  type = list(any)
+}
+
 variable "ingress_rule_sonarqube" {
   type = list(any)
 }
