@@ -6,8 +6,8 @@ pipeline {
         jdk 'jdk-8'
     }
     environment {
-        DOCKER_HUB_USER = 
-        DOCKER_IMAGE =
+        DOCKER_CREDS = credentials('docker-token')
+        DOCKER_IMAGE = "java-app:${env.BUILD_ID}"
         SONAR_QUBE_SERVER = 'sonar-scanner'
     }
 
