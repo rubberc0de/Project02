@@ -33,7 +33,16 @@ pipeline {
         }
         stage('Test') {
             steps {
-                echo 'Testing the application...'
+                withSonarQubeEnv("${SONAR_QUBE_SERVER}") {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+            post {
+                failure {
+                    emailext body: "Application did not pass Sonarqube quality checks, please fix the vulnerabilities before trying again. Build #${env.BUILD_NUMBER}",
+                             subject: "Error: Quality Gate / Test Stage",
+                             to: '$DEFAULT_RECIPIENTS'
+                }
             }
         }
         stage('Deploy') {
