@@ -1,10 +1,30 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'maven'
+        jdk 'jdk-8'
+    }
+    environment {
+        DOCKER_HUB_USER = 
+        DOCKER_IMAGE =
+        SONAR_QUBE_SERVER = 'sonar-scanner'
+    }
+
+    }
     stages {
-        stage('Build') { 
+        stage('Build the app') { 
             steps {
-                echo 'Building application...'
+                echo 'Building application with maven...'
+                sh 'mvn clean package -DskipTests'
+            }
+        }
+        post {
+            failure {
+                emailext body: "Build compilation failed. Check the logs and resolve the issue before fixing the pipeline"
+                        subject: "Error: Java application failed on build stage"
+                        to: '$DEFAULT_RECIPIENTS'
+                }
             }
         }
         stage('Test') {
@@ -17,5 +37,4 @@ pipeline {
                 echo 'Deploying application...'
             }
         }
-    }
-}
+    
