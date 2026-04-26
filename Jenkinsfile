@@ -16,7 +16,9 @@ pipeline {
         stage('Build the app') { 
             steps {
                 echo 'Building application with maven...'
+                dir('webapp') {
                 sh 'mvn clean package -DskipTests'
+                }
             }
 
         post {
