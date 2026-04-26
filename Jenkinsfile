@@ -21,9 +21,11 @@ pipeline {
 
         post {
             failure {
-                emailext body: "Build compilation failed. Check the logs and resolve the issue before fixing the pipeline"
-                        subject: "Error: Java application failed on build stage"
-                        to: '$DEFAULT_RECIPIENTS'
+                emailext (
+                        body: "Build compilation failed. Check the logs and resolve the issue before fixing the pipeline",
+                        subject: "Error: Java application failed on build stage",
+                        to: '$DEFAULT_RECIPIENTS',
+                        )
                 }
             }
         }
