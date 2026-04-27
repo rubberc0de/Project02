@@ -80,6 +80,12 @@ pipeline {
                 }
             }
         }
+
+        stage ('Build docker image') {
+            steps {
+                script 
+            }
+        }
         stage('Deploy') {
             steps {
                 echo 'Deploying application...'
