@@ -54,6 +54,10 @@ variable "ingress_rule_sonarqube" {
   type = list(any)
 }
 
+variable "egress_rule_sonarqube" {
+  type = list(any)
+}
+
 variable "SSM_rules" {
   type = list(any)
 }

@@ -57,7 +57,7 @@ module "sonar_security" {
   vpc_id         = module.vpc.vpc_id
   sg_name        = "sonar-sg"
   ingress_rules  = var.ingress_rule_sonarqube
-  egress_rules   = []
+  egress_rules   = var.egress_rule_sonarqube
 }
 
 #Instances

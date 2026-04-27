@@ -4,12 +4,13 @@ pipeline {
     tools {
         maven 'maven'
         jdk 'jdk-8'
+        nodejs 'nodeJS'
     }
 
     environment {
         DOCKER_CREDS = credentials('docker-token')
         DOCKER_IMAGE = "java-app:${env.BUILD_ID}"
-        SONAR_QUBE_SERVER = 'sonar-scanner'
+        SONAR_QUBE_SERVER = 'Sonarqube'
     }
 
     stages {
@@ -33,14 +34,48 @@ pipeline {
         }
         stage('Test') {
             steps {
-                withSonarQubeEnv("${SONAR_QUBE_SERVER}") {
-                    sh 'mvn sonar:sonar'
+                script {
+                    def jdk17 = tool name: 'jdk-17'
+                    withEnv(["JAVA_HOME=${jdk17}", "PATH+JAVA=${jdk17}/bin"]) {
+                        withSonarQubeEnv("${SONAR_QUBE_SERVER}") {
+                            dir('webapp') {
+                                sh 'mvn sonar:sonar'
+                    }
+                }
+                timeout(time: 5, unit: 'MINUTES') {
+                def qg = waitForQualityGate() 
+                if (qg.status != 'OK') {
+                    error "Pipeline aborted due SonarQube Quality Gate: ${qg.status}"
+                    }
                 }
             }
+        }
+    }
             post {
                 failure {
                     emailext body: "Application did not pass Sonarqube quality checks, please fix the vulnerabilities before trying again. Build #${env.BUILD_NUMBER}",
                              subject: "Error: Quality Gate / Test Stage",
+                             to: '$DEFAULT_RECIPIENTS'
+                }
+            }
+        }
+                stage('OWASP Dependency Check') {
+                    tools {
+        jdk "jdk-17"
+    }
+            steps {
+                withCredentials([string(credentialsId: 'NVD_API_KEY', variable: 'NVD_KEY')]) {
+                    dependencyCheck(
+                        additionalArguments: "--nvdApiKey ${NVD_KEY} --scan ./ --format HTML --format XML", 
+                        odcInstallation: 'OWASP'
+                    )
+                }
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+            post {
+                failure {
+                    emailext body: "Critical vulnerabilities found on the dependancies of the app. Build #${env.BUILD_NUMBER}",
+                             subject: "Error: Security Scan (OWASP)",
                              to: '$DEFAULT_RECIPIENTS'
                 }
             }
