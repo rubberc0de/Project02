@@ -11,6 +11,9 @@ pipeline {
         DOCKER_CREDS = credentials('docker-token')
         DOCKER_IMAGE = "java-app:${env.BUILD_ID}"
         SONAR_QUBE_SERVER = 'Sonarqube'
+        ECR_URL = "926909118217.dkr.ecr.eu-south-2.amazonaws.com"
+        REPO_NAME = "my_repository"
+        REGION = "eu-south-2"
     }
 
     stages {
@@ -42,6 +45,7 @@ pipeline {
                                 sh 'mvn sonar:sonar'
                     }
                 }
+                
                 timeout(time: 5, unit: 'MINUTES') {
                 def qg = waitForQualityGate() 
                 if (qg.status != 'OK') {
@@ -80,19 +84,19 @@ pipeline {
                 }
             }
         }
-                stage('Docker Build & Push') {
+        
+        stage('Docker Build & Push') {
             steps {
                 script {
-                    dockerImage = docker.build("${DOCKER_IMAGE}")
-                        docker.withRegistry("https://${ECR_URL}", "ecr:eu-south-2:aws-creds") {
-                            dockerImage.push()
-                            dockerImage.push("v1.0")
+                        def fullImageName = "${env.ECR_URL}/${env.REPO_NAME}:${env.BUILD_ID}"
+                        def latestImageName = "${env.ECR_URL}/${env.REPO_NAME}:latest"
+                        sh "docker build -t ${fullImageName} ."
+                        sh "aws ecr get-login-password --region ${env.REGION} | docker login --username AWS --password-stdin ${env.ECR_URL}"
+                        sh "docker push ${fullImageName}"
+                        sh "docker tag ${fullImageName} ${latestImageName}"
+                        sh "docker push ${latestImageName}"
             }
         }
-    }
-}
-                }
-            }
             post {
                 failure {
                     emailext body: "Error on the docker build & push stage, please check. Build #${env.BUILD_NUMBER}",
@@ -100,8 +104,11 @@ pipeline {
                              to: '$DEFAULT_RECIPIENTS'
                 }
             }
+        }
         stage('Deploy') {
             steps {
                 echo 'Deploying application...'
             }
         }
+    }
+}
