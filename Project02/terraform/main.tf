@@ -38,8 +38,8 @@ module "ssm_security" {
   sg_description = "Allow connectivity to SSM endpoints"
   vpc_id         = module.vpc.vpc_id
   sg_name        = "SSM-sg"
-  ingress_rules   = var.SSM_rules
-  egress_rules  = var.SSM_rules
+  ingress_rules  = var.SSM_rules
+  egress_rules   = var.SSM_rules
 }
 
 module "internet_security" {
@@ -47,8 +47,8 @@ module "internet_security" {
   sg_description = "Allow connectivity to the Internet on port 80 & 443"
   vpc_id         = module.vpc.vpc_id
   sg_name        = "Internet-sg"
-  ingress_rules   = var.internet_rules
-  egress_rules  = var.internet_rules
+  ingress_rules  = var.internet_rules
+  egress_rules   = var.internet_rules
 }
 
 module "sonar_security" {
@@ -174,4 +174,12 @@ resource "aws_lb_target_group_attachment" "attach_sonar" {
   target_group_arn = aws_lb_target_group.tg["sonar"].arn
   target_id        = module.Sonar.instance_id
   port             = 9000
+}
+
+#Containerization
+
+module "my_repository" {
+  source     = "./modules/container"
+  name       = var.ecr_name
+  mutability = var.ecr_mutability
 }

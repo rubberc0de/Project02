@@ -88,3 +88,11 @@ variable "nlb_config" {
 variable "lb_health_check" {
   type = string
 }
+
+variable "ecr_name" {
+  type = string
+}
+
+variable "ecr_mutability" {
+  type = string
+}
