@@ -80,16 +80,28 @@ pipeline {
                 }
             }
         }
-
-        stage ('Build docker image') {
+                stage('Docker Build & Push') {
             steps {
-                script 
+                script {
+                    dockerImage = docker.build("${DOCKER_IMAGE}")
+                        docker.withRegistry("https://${ECR_URL}", "ecr:eu-south-2:aws-creds") {
+                            dockerImage.push()
+                            dockerImage.push("v1.0")
             }
         }
+    }
+}
+                }
+            }
+            post {
+                failure {
+                    emailext body: "Error on the docker build & push stage, please check. Build #${env.BUILD_NUMBER}",
+                             subject: "Error: Docker Build & Push Stage",
+                             to: '$DEFAULT_RECIPIENTS'
+                }
+            }
         stage('Deploy') {
             steps {
                 echo 'Deploying application...'
             }
         }
-    }
-}
