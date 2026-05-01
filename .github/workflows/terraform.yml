@@ -11,7 +11,7 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY_ID }}"
       AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-      
+      AWS_DEFAULT_REGION: "eu-south-2"
     name: 'Terraform'
     runs-on: ubuntu-latest
 
@@ -23,6 +23,12 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Download tfvars from AWS Secrets Manager
+      run:
+          aws secretsmanager get-secret-value \
+            --secret-id terraform.tfvars \
+            --query SecretString \
+            --output text > terraform.tfvars
     - name: Set up terraform
       uses: hashicorp/setup-terraform@v4
       with:
@@ -37,5 +43,5 @@ jobs:
     - name: Terraform Plan
       run: terraform plan -input=false
 
-    - name: Terraform Apply
-      run: terraform apply -auto-approve -input=false
+    #- name: Terraform Apply
+    #  run: terraform apply -auto-approve -input=false
