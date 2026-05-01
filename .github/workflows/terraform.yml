@@ -24,7 +24,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
     - name: Download tfvars from AWS Secrets Manager
-      run:
+      run: |
           aws secretsmanager get-secret-value \
             --secret-id "terraform.tfvars" \
             --query SecretString \
