@@ -18,6 +18,7 @@ jobs:
     defaults:
       run:
         shell: bash
+        working-directory: ./Project02/terraform
 
     steps:
     - name: Checkout
