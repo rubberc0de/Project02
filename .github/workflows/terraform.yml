@@ -26,7 +26,7 @@ jobs:
     - name: Download tfvars from AWS Secrets Manager
       run:
           aws secretsmanager get-secret-value \
-            --secret-id terraform.tfvars \
+            --secret-id "terraform.tfvars" \
             --query SecretString \
             --output text > terraform.tfvars
     - name: Set up terraform
