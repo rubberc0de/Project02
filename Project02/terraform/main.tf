@@ -100,25 +100,6 @@ module "Sonar" {
 
 }
 
-module "Tomcat" {
-  source               = "./modules/compute"
-  instance_name        = var.tomcat_name
-  iam_instance_profile = module.iam_ssm.instance_profile_name
-  subnet_id            = module.vpc.private_subnets[0]
-  vpc_security_group_ids = [
-    module.jenkins_security.sg_id,
-    module.internet_security.sg_id,
-    module.ssm_security.sg_id
-  ]
-
-  ami_id        = var.instance_ami
-  instance_type = var.tomcat_size
-  volume_size   = var.tomcat_volume
-
-  common_tags = var.common_tags
-
-}
-
 #Connection to SSM
 
 
