@@ -96,3 +96,11 @@ variable "ecr_name" {
 variable "ecr_mutability" {
   type = string
 }
+
+variable "ecr_name_app" {
+  type = string
+}
+
+variable "ecr_mutability_app" {
+  type = string
+}
