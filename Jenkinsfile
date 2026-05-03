@@ -8,7 +8,6 @@ pipeline {
     }
 
     environment {
-        DOCKER_CREDS = credentials('docker-token')
         DOCKER_IMAGE = "java-app:${env.BUILD_ID}"
         SONAR_QUBE_SERVER = 'Sonarqube'
         ECR_URL = "926909118217.dkr.ecr.eu-south-2.amazonaws.com"
