@@ -158,21 +158,26 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to Production Container') {
-            steps {
-                script {
-                    def containerName = "webapp"
-                    def hostPort = "8083"
-                    def containerPort = "8080"
-                    def fullImageName = "${env.ECR_URL}/${env.REPO_NAME}:${env.BUILD_ID}"
+            stage('Deploy to Production Container') {
+                steps {
+                    script {
+                        def containerName = "webapp"
+                        def hostPort = "8083"
+                        def containerPort = "8080"
+                        def fullImageName = "${env.ECR_URL}/${env.REPO_NAME}:${env.BUILD_ID}"
 
-                    sh "aws ecr get-login-password --region eu-south-2 | docker login --username AWS --password-stdin ${env.ECR_URL}"
-                    sh "docker stop ${containerName} || true"
-                    sh "docker rm ${containerName} || true"
-                    sh "docker pull ${fullImageName}"
-                    sh "docker run -d --name ${containerName} -p ${hostPort}:${containerPort} ${fullImageName}"
+                        sh "aws ecr get-login-password --region eu-south-2 | docker login --username AWS --password-stdin ${env.ECR_URL}"
+                        sh "docker stop ${containerName} || true"
+                        sh "docker rm ${containerName} || true"
+                        sh "docker pull ${fullImageName}"
+                        sh "docker run -d --name ${containerName} -p ${hostPort}:${containerPort} ${fullImageName}"
+                    }
+                }
+                success {
+                    emailext body: "Deployment successful. Build #${env.BUILD_NUMBER}",
+                             subject: "Success: Deployment Stage",
+                             to: '$DEFAULT_RECIPIENTS'
                 }
             }
         }
     }
-}
