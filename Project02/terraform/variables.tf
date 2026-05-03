@@ -14,11 +14,19 @@ variable "sonar_size" {
   type = string
 }
 
+variable "tomcat_size" {
+  type = string
+}
+
 variable "sonar_name" {
   type = string
 }
 
 variable "jenkins_name" {
+  type = string
+}
+
+variable "tomcat_name" {
   type = string
 }
 
@@ -32,6 +40,10 @@ variable "jenkins_volume" {
 
 variable "sonar_volume" {
   type = number
+}
+
+variable "tomcat_volume" {
+  type = string
 }
 
 variable "common_tags" {
@@ -54,6 +66,10 @@ variable "ingress_rule_sonarqube" {
   type = list(any)
 }
 
+variable "egress_rule_sonarqube" {
+  type = list(any)
+}
+
 variable "SSM_rules" {
   type = list(any)
 }
@@ -70,5 +86,21 @@ variable "nlb_config" {
 }
 
 variable "lb_health_check" {
+  type = string
+}
+
+variable "ecr_name" {
+  type = string
+}
+
+variable "ecr_mutability" {
+  type = string
+}
+
+variable "ecr_name_app" {
+  type = string
+}
+
+variable "ecr_mutability_app" {
   type = string
 }
