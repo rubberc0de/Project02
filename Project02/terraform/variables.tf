@@ -104,3 +104,31 @@ variable "ecr_name_app" {
 variable "ecr_mutability_app" {
   type = string
 }
+
+variable "backend_bucket" {
+  type = string
+}
+
+variable "backend_key" {
+  type = string
+}
+
+variable "backend_region" {
+  type = string
+}
+
+variable "backend_dynamodb_table" {
+  type = string
+}
+
+variable "backend_encrypt" {
+  type = bool
+}
+
+variable "backend_read_capacity" {
+  type = number
+}
+
+variable "backend_write_capacity" {
+  type = number
+}
