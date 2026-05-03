@@ -164,9 +164,3 @@ module "my_repository" {
   name       = var.ecr_name
   mutability = var.ecr_mutability
 }
-
-module "my_repository_app" {
-  source     = "./modules/container"
-  name       = var.ecr_name_app
-  mutability = var.ecr_mutability_app
-}
