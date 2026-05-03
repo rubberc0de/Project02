@@ -8,7 +8,6 @@ pipeline {
     }
 
     environment {
-        DOCKER_CREDS = credentials('docker-token')
         DOCKER_IMAGE = "java-app:${env.BUILD_ID}"
         SONAR_QUBE_SERVER = 'Sonarqube'
         ECR_URL = "926909118217.dkr.ecr.eu-south-2.amazonaws.com"
@@ -159,6 +158,7 @@ pipeline {
                 }
             }
         }
+
         stage('Deploy to Production Container') {
             steps {
                 script {
@@ -172,8 +172,9 @@ pipeline {
                     sh "docker rm ${containerName} || true"
                     sh "docker pull ${fullImageName}"
                     sh "docker run -d --name ${containerName} -p ${hostPort}:${containerPort} ${fullImageName}"
-                    }
                 }
+            }
+            post {
                 success {
                     emailext body: "Deployment successful. Build #${env.BUILD_NUMBER}",
                              subject: "Success: Deployment Stage",
@@ -182,3 +183,4 @@ pipeline {
             }
         }
     }
+}
