@@ -172,8 +172,13 @@ pipeline {
                     sh "docker rm ${containerName} || true"
                     sh "docker pull ${fullImageName}"
                     sh "docker run -d --name ${containerName} -p ${hostPort}:${containerPort} ${fullImageName}"
+                    }
+                }
+                success {
+                    emailext body: "Deployment successful. Build #${env.BUILD_NUMBER}",
+                             subject: "Success: Deployment Stage",
+                             to: '$DEFAULT_RECIPIENTS'
                 }
             }
         }
     }
-}
