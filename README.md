@@ -3,7 +3,7 @@
 
 This project implements a high-availability, multi-tier DevSecOps environment on AWS. It features a fully automated infrastructure provisioned with Terraform and a sophisticated Jenkins CI/CD pipeline. The architecture integrates continuous security scanning, code quality gates, and automated deployment to containerized environments.
 
-<img width="670" height="470" alt="Untitled Diagram(1)" src="https://github.com/user-attachments/assets/4548c09e-de05-47a5-a55f-99827e98108b" />  <img width="760" height="580" alt="Untitled Diagram(2)" src="https://github.com/user-attachments/assets/ed448bf2-ad46-4419-ab7d-26f962039d01" />
+<img width="670" height="470" alt="Untitled Diagram(1)" src="https://github.com/user-attachments/assets/4548c09e-de05-47a5-a55f-99827e98108b" />  <img width="960" height="720" alt="Untitled Diagram(2)" src="https://github.com/user-attachments/assets/ed448bf2-ad46-4419-ab7d-26f962039d01" />
 
 ### 🏗️ Architecture (AWS Cloud)
 
@@ -35,23 +35,31 @@ This project implements a high-availability, multi-tier DevSecOps environment on
 
 The workflow automates the journey from code commit to deployment, prioritizing security at every stage:
 
-* **Source Control**: Code is hosted on GitHub.
+**Source Control**: Code is hosted on GitHub.
 
-* **Continuous Integration (Jenkins)**:
+**1. Infrastructure Pipeline (GitHub Actions + Terraform)**
 
-  * **Maven Compile & Test**: Automatic build and unit testing.
+* **Continuous Deployment (IaC)**: Every change to the Terraform configuration triggers a GitHub Actions workflow.
 
-  * **Quality Analysis (SonarQube)**: Static Application Security Testing (SAST) to identify bugs and code smells.
+* **Plan & Apply**: Automated terraform plan for code review in Pull Requests and terraform apply to provision AWS resources.
 
-  * **Dependency Check (OWASP)**: Scans for vulnerabilities in third-party libraries.
+* **State Management**: Securely manages the infrastructure state in Amazon S3 to ensure consistency across the team.
 
-  * **Continuous Deployment**:
+**2. Application Pipeline (Jenkins)**:
 
-  * **Docker Build & Push**: Packaging the app into a container and pushing it to Amazon ECR.
+* **Maven Compile & Test**: Automatic build and unit testing.
 
-  * **Image Scan (Trivy)**: Deep scanning of Docker images for OS-level vulnerabilities.
+* **Quality Analysis (SonarQube)**: Static Application Security Testing (SAST) to identify bugs and code smells.
 
-**Approval & Delivery**:
+* **Dependency Check (OWASP)**: Scans for vulnerabilities in third-party libraries.
+
+* **Continuous Deployment**:
+
+* **Docker Build & Push**: Packaging the app into a container and pushing it to Amazon ECR.
+
+* **Image Scan (Trivy)**: Deep scanning of Docker images for OS-level vulnerabilities.
+
+* **Approval & Delivery**:
 
   * **Approval Mail**: Manual gate to authorize the final deployment.
 
@@ -65,7 +73,7 @@ The workflow automates the journey from code commit to deployment, prioritizing 
 
 * **IaC**: Terraform
 
-* **CI/CD**: Jenkins, GitHub <img width="2153" height="1751" alt="Untitled Diagram(2)" src="https://github.com/user-attachments/assets/a435bc08-a1f6-4f95-8907-274a885adb44" />
+* **CI/CD**: Jenkins, GitHub
 
 * **Security & Quality**: SonarQube, OWASP Dependency-Check, Trivy
 
