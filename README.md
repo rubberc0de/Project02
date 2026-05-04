@@ -70,7 +70,7 @@ The workflow automates the journey from code commit to deployment, prioritizing 
 
 ### 🛠️ Tech Stack
 
-* **Cloud**: AWS (VPC, S3, ECR, NLB, NAT Gateway, Secrets Manager)
+* **Cloud**: AWS (VPC, S3, ECR, NLB, NAT Gateway, EC2, Secrets Manager)
 
 * **IaC**: Terraform
 
