@@ -1,9 +1,10 @@
+
 # 🚀 AWS DevSecOps Pipeline & Infrastructure Automation
 ### 📋 Project Overview
 
 This project implements a high-availability, multi-tier DevSecOps environment on AWS. It features a fully automated infrastructure provisioned with Terraform and a sophisticated Jenkins CI/CD pipeline. The architecture integrates continuous security scanning, code quality gates, and automated deployment to containerized environments.
 
-<img width="670" height="470" alt="Untitled Diagram(1)" src="https://github.com/user-attachments/assets/4548c09e-de05-47a5-a55f-99827e98108b" />  <img width="960" height="820" alt="Untitled Diagram(2)" src="https://github.com/user-attachments/assets/ed448bf2-ad46-4419-ab7d-26f962039d01" />
+<img width="670" height="470" alt="Untitled Diagram(1)" src="https://github.com/user-attachments/assets/4548c09e-de05-47a5-a55f-99827e98108b" />  <img width="960" height="820" alt="Untitled Diagram(3)" src="https://github.com/user-attachments/assets/b9a92c72-26fb-42c4-b35d-a85c8d80e897" />
 
 ### 🏗️ Architecture (AWS Cloud)
 
