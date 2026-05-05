@@ -70,6 +70,14 @@ variable "egress_rule_sonarqube" {
   type = list(any)
 }
 
+variable "ingress_rule_prometheus" {
+  type = list(any)
+}
+
+variable "ingress_rule_grafana" {
+  type = list(any)
+}
+
 variable "SSM_rules" {
   type = list(any)
 }
@@ -102,5 +110,17 @@ variable "ecr_name_app" {
 }
 
 variable "ecr_mutability_app" {
+  type = string
+}
+
+variable "prometheus_size" {
+  type = string
+}
+
+variable "prometheus_name" {
+  type = string
+}
+
+variable "prometheus_volume" {
   type = string
 }

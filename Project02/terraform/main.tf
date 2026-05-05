@@ -60,6 +60,24 @@ module "sonar_security" {
   egress_rules   = var.egress_rule_sonarqube
 }
 
+module "prometheus_security" {
+  source         = "./modules/security"
+  sg_description = "Prometheus port 9090"
+  vpc_id         = module.vpc.vpc_id
+  sg_name        = "prometheus-sg"
+  ingress_rules  = var.ingress_rule_prometheus
+  egress_rules   = []
+}
+
+module "grafana_security" {
+  source         = "./modules/security"
+  sg_description = "Grafana port 3000"
+  vpc_id         = module.vpc.vpc_id
+  sg_name        = "grafana-sg"
+  ingress_rules  = var.ingress_rule_grafana
+  egress_rules   = []
+}
+
 #Instances
 
 module "Jenkins" {
@@ -98,6 +116,25 @@ module "Sonar" {
 
   common_tags = var.common_tags
 
+}
+
+module "Prometheus" {
+  source               = "./modules/compute"
+  instance_name        = var.prometheus_name
+  iam_instance_profile = module.iam_ssm.instance_profile_name
+  subnet_id            = module.vpc.private_subnets[0]
+  vpc_security_group_ids = [
+    module.prometheus_security.sg_id,
+    module.internet_security.sg_id,
+    module.ssm_security.sg_id,
+    module.grafana_security.sg_id
+  ]
+
+  ami_id        = var.instance_ami
+  instance_type = var.prometheus_size
+  volume_size   = var.prometheus_volume
+
+  common_tags = var.common_tags
 }
 
 #Connection to SSM
@@ -155,6 +192,18 @@ resource "aws_lb_target_group_attachment" "attach_sonar" {
   target_group_arn = aws_lb_target_group.tg["sonar"].arn
   target_id        = module.Sonar.instance_id
   port             = 9000
+}
+
+resource "aws_lb_target_group_attachment" "attach_prometheus" {
+  target_group_arn = aws_lb_target_group.tg["prometheus"].arn
+  target_id        = module.Prometheus.instance_id
+  port             = 9090
+  }
+
+resource "aws_lb_target_group_attachment" "attach_prometheus_3000" {
+  target_group_arn = aws_lb_target_group.tg["grafana"].arn
+  target_id        = module.Prometheus.instance_id
+  port             = 3000
 }
 
 #Containerization
