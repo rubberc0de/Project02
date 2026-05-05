@@ -2,9 +2,11 @@ name: 'Terraform'
 
 on:
   push:
-    branches: [ "CICD_terraform" ]
+    branches: '**'
   pull_request:
-    branches: [ "CICD_terraform" ]
+    branches: '**'
+    branches-ignore:
+      - 'main'
 
 jobs:
   deploy:
