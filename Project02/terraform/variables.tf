@@ -66,6 +66,14 @@ variable "ingress_rule_grafana" {
   type = list(any)
 }
 
+variable "egress_rule_prometheus" {
+  type = list(any)
+}
+
+variable "egress_rule_grafana" {
+  type = list(any)
+}
+
 variable "SSM_rules" {
   type = list(any)
 }
@@ -79,10 +87,6 @@ variable "nlb_config" {
     port        = number
     instance_id = string
   }))
-}
-
-variable "lb_health_check" {
-  type = string
 }
 
 variable "ecr_name" {
@@ -110,5 +114,5 @@ variable "prometheus_name" {
 }
 
 variable "prometheus_volume" {
-  type = string
+  type = number
 }

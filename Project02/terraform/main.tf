@@ -66,7 +66,7 @@ module "prometheus_security" {
   vpc_id         = module.vpc.vpc_id
   sg_name        = "prometheus-sg"
   ingress_rules  = var.ingress_rule_prometheus
-  egress_rules   = []
+  egress_rules   = var.egress_rule_prometheus
 }
 
 module "grafana_security" {
@@ -75,7 +75,7 @@ module "grafana_security" {
   vpc_id         = module.vpc.vpc_id
   sg_name        = "grafana-sg"
   ingress_rules  = var.ingress_rule_grafana
-  egress_rules   = []
+  egress_rules   = var.egress_rule_grafana
 }
 
 #Instances
@@ -198,7 +198,7 @@ resource "aws_lb_target_group_attachment" "attach_prometheus" {
   target_group_arn = aws_lb_target_group.tg["prometheus"].arn
   target_id        = module.Prometheus.instance_id
   port             = 9090
-  }
+}
 
 resource "aws_lb_target_group_attachment" "attach_prometheus_3000" {
   target_group_arn = aws_lb_target_group.tg["grafana"].arn
