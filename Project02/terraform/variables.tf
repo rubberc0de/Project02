@@ -14,19 +14,11 @@ variable "sonar_size" {
   type = string
 }
 
-variable "tomcat_size" {
-  type = string
-}
-
 variable "sonar_name" {
   type = string
 }
 
 variable "jenkins_name" {
-  type = string
-}
-
-variable "tomcat_name" {
   type = string
 }
 
@@ -40,10 +32,6 @@ variable "jenkins_volume" {
 
 variable "sonar_volume" {
   type = number
-}
-
-variable "tomcat_volume" {
-  type = string
 }
 
 variable "common_tags" {
